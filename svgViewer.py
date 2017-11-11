@@ -1,8 +1,22 @@
+#!/usr/bin/python
 import sys
 from PyQt5 import QtGui, QtSvg, QtWidgets, QtCore
 import asyncore
 import pyinotify
 
+from daemon import runner
+
+class App():
+    def __init__(self):
+        self.stdin_path = '/dev/null'
+        self.stdout_path = '/dev/tty'
+        self.stderr_path = '/dev/tty'
+        self.pidfile_path =  '/tmp/foo.pid'
+        self.pidfile_timeout = 5
+    def run(self):
+        while True:
+            print("Howdy!  Gig'em!  Whoop!")
+            time.sleep(10)
 # app = QtWidgets.QApplication(sys.argv)
 # svgWidget = QtSvg.QSvgWidget('output_debug.svg')
 # # svgWidget.setGeometry(50,50,759,668)
@@ -57,22 +71,30 @@ class Example(QtSvg.QSvgWidget):
         self.setWindowTitle('Quit button')
         self.setWindowFlags(self.windowFlags() | QtCore.Qt.FramelessWindowHint)
         self.show()
+
+    # def run(self):
+    #     self.show()
+
     def test(self):
         print( "test")
 
 def main():
-    app = QtWidgets.QApplication(sys.argv)
-    svg_file = 'output_debug.svg'
-    ex = Example(svg_file)
+    # app = QtWidgets.QApplication(sys.argv)
+    # svg_file = 'output_debug.svg'
+    # ex = Example(svg_file)
 
-    wm = pyinotify.WatchManager()  # Watch Manager
-    mask_events = pyinotify.IN_MODIFY
+    # wm = pyinotify.WatchManager()  # Watch Manager
+    # mask_events = pyinotify.IN_MODIFY
 
-    # ex.update()
-    notifier = pyinotify.AsyncNotifier(wm, lambda *args : ex.update(args))
-    wdd = wm.add_watch('./', mask_events)
+    # # ex.update()
+    # notifier = pyinotify.AsyncNotifier(wm, lambda *args : ex.update(args))
+    # wdd = wm.add_watch('./', mask_events)
 
-    sys.exit(app.exec_())
+    # sys.exit(app.exec_())
+
+    app = App()
+    daemon_runner = runner.DaemonRunner(app)
+    daemon_runner.do_action()
 
 if __name__ == '__main__':
     main()
