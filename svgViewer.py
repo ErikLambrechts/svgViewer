@@ -61,8 +61,7 @@ class Example(QtSvg.QSvgWidget):
         cursor =QtGui.QCursor()
         print( cursor.pos())
 
-    def update(self, a = None):
-        print("a : ", a)
+    def update(self):
 
         dx_window = self.geometry().width()
         dy_window = self.geometry().height()
