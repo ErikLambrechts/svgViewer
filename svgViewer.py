@@ -19,6 +19,7 @@ class ThreadClass(QtCore.QThread):
         #     time.sleep(1)
         #     print(1)
 
+    def run(self):
         mask_events = pyinotify.IN_MODIFY
         # event handler
         eh = MyEventHandler(self.widget)
@@ -107,12 +108,15 @@ class MyEventHandler(pyinotify.ProcessEvent):
 
     # def process_IN_DELETE(self, event):
     #     print("DELETE event:", event.pathname)
+    def process_IN_CREATE(self, event):
+        self.widget.update()
 
     def process_IN_MODIFY(self, event):
         print( "MODIFY event:", event.pathname)
 
     # def process_IN_OPEN(self, event):
     #     print("OPEN event:", event.pathname)
+        self.widget.update()
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
