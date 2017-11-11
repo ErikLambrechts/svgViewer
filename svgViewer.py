@@ -8,10 +8,36 @@ import pyinotify
 # # svgWidget.setGeometry(50,50,759,668)
 # svgWidget.show()
 
+class ThreadClass(QtCore.QThread):
+
+    def __init__(self, widgit):
+        super().__init__()
+        self.widget = widgit
+
+    # def run(self):
+        # while True:
+        #     time.sleep(1)
+        #     print(1)
+
+        mask_events = pyinotify.IN_MODIFY
+        # event handler
+        eh = MyEventHandler(self.widget)
+
+        wm = pyinotify.WatchManager()  # Watch Manager
+        # notifier = pyinotify.AsyncNotifier(wm, lambda *args : ex.update(args))
+        # notifier = pyinotify.AsyncNotifier(wm, test)
+        # wdd = wm.add_watch('./', mask_events)
+        wm.add_watch('./', pyinotify.ALL_EVENTS, rec=True)
+        # notifier = pyinotify.Notifier(wm, eh)
+        notifier = pyinotify.AsyncNotifier(wm, eh)
+        notifier.loop()
+
+
 # sys.exit(app.exec_())
 class Example(QtSvg.QSvgWidget):
     def __init__(self, name):
         super().__init__(name)
+
         self.file_name = name
         self.initUI()
         self.scale = 0.1
@@ -56,21 +82,47 @@ class Example(QtSvg.QSvgWidget):
         self.setGeometry(0, 0, 1024, 768)
         self.setWindowTitle('Quit button')
         self.setWindowFlags(self.windowFlags() | QtCore.Qt.FramelessWindowHint)
-        self.show()
-    def test(self):
-        print( "test")
+        print("pre")
+        print("post")
+
+class MyEventHandler(pyinotify.ProcessEvent):
+    def __init__(self, widget):
+        super().__init__()
+        self.widget = widget
+
+    # def process_IN_ACCESS(self, event):
+    #     print("ACCESS event:", event.pathname)
+
+    # def process_IN_ATTRIB(self, event):
+    #     # print("ATTRIB event:", event.pathname)
+
+    # def process_IN_CLOSE_NOWRITE(self, event):
+    #     print("CLOSE_NOWRITE event:", event.pathname)
+
+    # def process_IN_CLOSE_WRITE(self, event):
+    #     print("CLOSE_WRITE event:", event.pathname)
+
+    # def process_IN_CREATE(self, event):
+    #     print("CREATE event:", event.pathname)
+
+    # def process_IN_DELETE(self, event):
+    #     print("DELETE event:", event.pathname)
+
+    def process_IN_MODIFY(self, event):
+        print( "MODIFY event:", event.pathname)
+
+    # def process_IN_OPEN(self, event):
+    #     print("OPEN event:", event.pathname)
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
     svg_file = 'output_debug.svg'
     ex = Example(svg_file)
+    watcher = ThreadClass(ex)
+    watcher.start()
 
-    wm = pyinotify.WatchManager()  # Watch Manager
-    mask_events = pyinotify.IN_MODIFY
-
-    # ex.update()
-    notifier = pyinotify.AsyncNotifier(wm, lambda *args : ex.update(args))
-    wdd = wm.add_watch('./', mask_events)
+    ex.show()
+    print("post sys")
 
     sys.exit(app.exec_())
 
