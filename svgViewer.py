@@ -17,7 +17,6 @@ class ThreadClass(QtCore.QThread):
     # def run(self):
         # while True:
         #     time.sleep(1)
-        #     print(1)
 
     def run(self):
         mask_events = pyinotify.IN_MODIFY
@@ -31,6 +30,8 @@ class ThreadClass(QtCore.QThread):
         wm.add_watch('./', pyinotify.ALL_EVENTS, rec=True)
         # notifier = pyinotify.Notifier(wm, eh)
         notifier = pyinotify.AsyncNotifier(wm, eh)
+
+
         notifier.loop()
 
 
@@ -59,7 +60,6 @@ class Example(QtSvg.QSvgWidget):
 
     def mouseReleaseEvent(self, QMouseEvent):
         cursor =QtGui.QCursor()
-        print( cursor.pos())
 
     def update(self):
 
@@ -75,46 +75,20 @@ class Example(QtSvg.QSvgWidget):
 
     def initUI(self):
         svgWidget = QtSvg.QSvgWidget(self.file_name)
-        # qbtn = QtGui.QPushButton('Quit', self)
-        # qbtn.resize(qbtn.sizeHint())
-        # qbtn.move(50, 50)
 
         self.setGeometry(0, 0, 1024, 768)
         self.setWindowTitle('Quit button')
         self.setWindowFlags(self.windowFlags() | QtCore.Qt.FramelessWindowHint)
-        print("pre")
-        print("post")
 
 class MyEventHandler(pyinotify.ProcessEvent):
     def __init__(self, widget):
         super().__init__()
         self.widget = widget
 
-    # def process_IN_ACCESS(self, event):
-    #     print("ACCESS event:", event.pathname)
-
-    # def process_IN_ATTRIB(self, event):
-    #     # print("ATTRIB event:", event.pathname)
-
-    # def process_IN_CLOSE_NOWRITE(self, event):
-    #     print("CLOSE_NOWRITE event:", event.pathname)
-
-    # def process_IN_CLOSE_WRITE(self, event):
-    #     print("CLOSE_WRITE event:", event.pathname)
-
-    # def process_IN_CREATE(self, event):
-    #     print("CREATE event:", event.pathname)
-
-    # def process_IN_DELETE(self, event):
-    #     print("DELETE event:", event.pathname)
     def process_IN_CREATE(self, event):
         self.widget.update()
 
     def process_IN_MODIFY(self, event):
-        print( "MODIFY event:", event.pathname)
-
-    # def process_IN_OPEN(self, event):
-    #     print("OPEN event:", event.pathname)
         self.widget.update()
 
 def main():
@@ -125,7 +99,6 @@ def main():
     watcher.start()
 
     ex.show()
-    print("post sys")
 
     sys.exit(app.exec_())
 
