@@ -126,11 +126,13 @@ class main():
             w.reload()
         self.update()
 
-    def update(self, center = None, scale=None):
+    def update(self, center = None, scale=None, scale_factor = None):
         if center:
             self.center = center
         if scale:
             self.scale = scale
+        if scale_factor:
+            self.scale *= scale_factor
 
         for w in self.windows:
             w.update()
