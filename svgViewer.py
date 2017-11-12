@@ -112,8 +112,13 @@ class svgViewer(object):
             print("start widgits")
             ex.show()
 
+    def update(self):
+        for ex in self.widgits:
+            ex.update()
+
     def __del__(self):
         sys.exit(self.app.exec_())
+
 def main():
 
     parser = OptionParser(usage="%prog files", version="%prog 1.0")
