@@ -92,6 +92,7 @@ class MyEventHandler(pyinotify.ProcessEvent):
     def process_IN_MODIFY(self, event):
         self.widget.update()
 
+class svgViewer(object):
 def main():
     app = QtWidgets.QApplication(sys.argv)
     svg_file = 'output_debug.svg'
@@ -104,6 +105,8 @@ def main():
     (options, args) = parser.parse_args()
 
     sys.exit(app.exec_())
+    svgViewer(['output_debug.svg'])
+    svgViewer.start()
 
 if __name__ == '__main__':
     main()
