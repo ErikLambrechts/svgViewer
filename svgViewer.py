@@ -64,6 +64,12 @@ class Example(QtSvg.QSvgWidget):
             self.parent.reload()
         if QKeyEvent.key() == QtCore.Qt.Key_Space:
             self.parent.reload()
+        if QKeyEvent.key() == QtCore.Qt.Key_Escape:
+             self.close()
+        if QKeyEvent.key() == QtCore.Qt.Key_Plus:
+            self.parent.update(scale_factor = 0.9)
+        if QKeyEvent.key() == QtCore.Qt.Key_Minus:
+            self.parent.update(scale_factor = 10/9)
     def mouseReleaseEvent(self, QMouseEvent):
         cursor =QtGui.QCursor()
 
