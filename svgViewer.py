@@ -100,8 +100,8 @@ class MyEventHandler(pyinotify.ProcessEvent):
 class main():
     def __init__(self):
         app = QtWidgets.QApplication(sys.argv)
-        svg_file = 'output_debug.svg'
-        self.windows = [Example(svg_file, self),Example(svg_file, self)]
+        svg_file = ['output_debug.svg', 'output_debug_selection.svg']
+        self.windows = [Example(f, self) for f in svg_file]
         watcher = ThreadClass(self)
         watcher.start()
         self.center = [0,0]
