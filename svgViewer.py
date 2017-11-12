@@ -57,6 +57,7 @@ class Example(QtSvg.QSvgWidget):
 
     def keyPressEvent(self, QKeyEvent):
         print(QKeyEvent)
+        self.parent.reload()
     def mouseReleaseEvent(self, QMouseEvent):
         cursor =QtGui.QCursor()
 
