@@ -88,7 +88,7 @@ class Example(QtSvg.QSvgWidget):
         svgWidget = QtSvg.QSvgWidget(self.file_name)
 
         self.setGeometry(0, 0, 1024, 768)
-        self.setWindowTitle('Quit button')
+        self.setWindowTitle(self.file_name)
         self.setWindowFlags(self.windowFlags() | QtCore.Qt.FramelessWindowHint)
 
 class MyEventHandler(pyinotify.ProcessEvent):
