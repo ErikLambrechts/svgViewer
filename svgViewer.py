@@ -45,7 +45,7 @@ class Example(QtSvg.QSvgWidget):
         x_center = (x_mouse - x_window) / dx_window * vb.width() + vb.x()
         y_center = (y_mouse - y_window) / dy_window * vb.height() + vb.y()
         self.center = [x_center, y_center]
-        self.update()
+        print("mousePressEvent")
 
         self.parent.update()
 
@@ -89,18 +89,21 @@ class svgViewer(object):
         self.widgits = []
         for f in filenames:
             print("init widget " + f)
-            self.widgits.append(Example(f))
+            w = Example(f, parent = self)
+            w.show()
+            self.widgits.append(w)
 
         print("init watcher")
         self.watcher = ThreadClass(self)
         print("end init")
 
     def start(self):
-        print("start watcher")
-        self.watcher.start()
         for ex in self.widgits:
             print("start widgits")
-            ex.show()
+            # ex.show()
+        print("start watcher")
+        self.watcher.start()
+        print("starting done")
 
     def update(self):
         for ex in self.widgits:
