@@ -25,11 +25,12 @@ class ThreadClass(QtCore.QThread):
         notifier.loop()
 
 class Example(QtSvg.QSvgWidget):
-    def __init__(self, name):
+    def __init__(self, name, parent = None):
         super().__init__(name)
 
         self.file_name = name
         self.initUI()
+        self.parent = parent
         self.scale = 0.1
         self.center = [0, 0]
 
@@ -45,6 +46,8 @@ class Example(QtSvg.QSvgWidget):
         y_center = (y_mouse - y_window) / dy_window * vb.height() + vb.y()
         self.center = [x_center, y_center]
         self.update()
+
+        self.parent.update()
 
     def mouseReleaseEvent(self, QMouseEvent):
         cursor =QtGui.QCursor()
