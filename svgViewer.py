@@ -54,7 +54,8 @@ class Example(QtSvg.QSvgWidget):
         center = [x_center, y_center]
         self.parent.update(center = center)
 
-
+    def keyPressEvent(self, QKeyEvent):
+        print(QKeyEvent)
     def mouseReleaseEvent(self, QMouseEvent):
         cursor =QtGui.QCursor()
 
