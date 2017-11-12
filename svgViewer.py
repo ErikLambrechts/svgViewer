@@ -6,14 +6,13 @@ from optparse import OptionParser
 
 class ThreadClass(QtCore.QThread):
 
-    def __init__(self, widgit):
+    def __init__(self):
         super().__init__()
-        self.widget = widgit
 
     def run(self):
         mask_events = pyinotify.IN_MODIFY
         # event handler
-        eh = MyEventHandler(self.widget)
+        eh = MyEventHandler()
 
         wm = pyinotify.WatchManager()  # Watch Manager
         # notifier = pyinotify.AsyncNotifier(wm, lambda *args : ex.update(args))
@@ -24,13 +23,30 @@ class ThreadClass(QtCore.QThread):
         notifier = pyinotify.AsyncNotifier(wm, eh)
         notifier.loop()
 
+class svgWindow():
+    def __init__(self, name, parent = None):
+        super().__init__()
+        self.app = QtWidgets.QApplication(sys.argv)
+        self.file_name = name
+        self.parent = parent
+        self.svg = Example(name, parent)
+
+    def update(self):
+        self.svg.update()
+
+    def show(self):
+        self.svg.show()
+
+
+
+    def __del__(self):
+        sys.exit(self.app.exec_())
+
 class Example(QtSvg.QSvgWidget):
     def __init__(self, name, parent = None):
         super().__init__(name)
-
         self.file_name = name
         self.initUI()
-        self.parent = parent
         self.scale = 0.1
         self.center = [0, 0]
 
@@ -50,7 +66,7 @@ class Example(QtSvg.QSvgWidget):
         self.parent.update()
 
     def mouseReleaseEvent(self, QMouseEvent):
-        cursor =QtGui.QCursor()
+        cursor = QtGui.QCursor()
 
     def update(self):
 
@@ -72,37 +88,33 @@ class Example(QtSvg.QSvgWidget):
         self.setWindowFlags(self.windowFlags() | QtCore.Qt.FramelessWindowHint)
 
 class MyEventHandler(pyinotify.ProcessEvent):
-    def __init__(self, widget):
+    def __init__(self):
         super().__init__()
-        self.widget = widget
 
     def process_IN_CREATE(self, event):
-        self.widget.update()
+        update_all()
 
     def process_IN_MODIFY(self, event):
-        self.widget.update()
+        update_all()
 
 class svgViewer(object):
     def __init__(self, filenames):
         print("init app")
-        self.app = QtWidgets.QApplication(sys.argv)
         self.widgits = []
         for f in filenames:
             print("init widget " + f)
-            w = Example(f, parent = self)
-            w.show()
+            w = svgWindow(f, parent = self)
             self.widgits.append(w)
 
         print("init watcher")
         self.watcher = ThreadClass(self)
         print("end init")
 
-    def start(self):
+        print("start watcher")
+        # self.watcher.start()
         for ex in self.widgits:
             print("start widgits")
-            # ex.show()
-        print("start watcher")
-        self.watcher.start()
+            ex.show()
         print("starting done")
 
     def update(self):
@@ -110,18 +122,44 @@ class svgViewer(object):
             ex.update()
 
     def __del__(self):
-        sys.exit(self.app.exec_())
+        for ex in self.widgits:
+            print("del widgits")
+            # ex.__del__()
+
+widgits = []
+watcher = None
+
+def update_all():
+    for w in widgits:
+        w.update()
 
 def main():
 
     parser = OptionParser(usage="%prog files", version="%prog 1.0")
     (options, args) = parser.parse_args()
 
-    # svgViewer(args)
-    svg_viewer = svgViewer(['output_debug.svg'])
+    # svg_viewer = svgViewer(['output_debug.svg', 'output_debug.svg'])
+    # svg_viewer = svgViewer(['output_debug.svg'])
+    filenames = ['output_debug.svg']
     print("main")
-    svg_viewer.start()
     print("main")
+    print("init app")
+    for f in filenames:
+        print("init widget " + f)
+        w = svgWindow(f)
+        widgits.append(w)
+
+    print("init watcher")
+    watcher = ThreadClass()
+    print("end init")
+
+    print("start watcher")
+    # self.watcher.start()
+    for ex in widgits:
+        print("start widgits")
+        ex.show()
+    print("starting done")
+
 
 if __name__ == '__main__':
     main()
