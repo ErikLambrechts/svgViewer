@@ -115,8 +115,10 @@ def main():
     (options, args) = parser.parse_args()
 
     # svgViewer(args)
-    svgViewer(['output_debug.svg'])
-    svgViewer.start()
+    svg_viewer = svgViewer(['output_debug.svg'])
+    print("main")
+    svg_viewer.start()
+    print("main")
 
 if __name__ == '__main__':
     main()
