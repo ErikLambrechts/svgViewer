@@ -93,14 +93,29 @@ class MyEventHandler(pyinotify.ProcessEvent):
         self.widget.update()
 
 class svgViewer(object):
-def main():
-    app = QtWidgets.QApplication(sys.argv)
-    svg_file = 'output_debug.svg'
-    ex = Example(svg_file)
-    watcher = ThreadClass(ex)
-    watcher.start()
+    def __init__(self, filenames):
+        print("init app")
+        self.app = QtWidgets.QApplication(sys.argv)
+        self.widgits = []
+        for f in filenames:
+            print("init widget " + f)
+            self.widgits.append(Example(f))
 
-    ex.show()
+        print("init watcher")
+        self.watcher = ThreadClass(self)
+        print("end init")
+
+    def start(self):
+        print("start watcher")
+        self.watcher.start()
+        for ex in self.widgits:
+            print("start widgits")
+            ex.show()
+
+    def __del__(self):
+        sys.exit(self.app.exec_())
+def main():
+
     parser = OptionParser(usage="%prog files", version="%prog 1.0")
     (options, args) = parser.parse_args()
 
