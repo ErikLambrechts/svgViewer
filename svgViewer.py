@@ -10,7 +10,8 @@ class ThreadClass(QtCore.QThread):
         self.widget = main
 
     def run(self):
-        mask_events = pyinotify.IN_MODIFY
+        # mask_events = pyinotify.IN_MODIFY
+
         # event handler
         eh = MyEventHandler(self.widget)
 
@@ -20,7 +21,9 @@ class ThreadClass(QtCore.QThread):
         # wdd = wm.add_watch('./', mask_events)
         wm.add_watch('./', pyinotify.ALL_EVENTS, rec=True)
         # notifier = pyinotify.Notifier(wm, eh)
-        notifier = pyinotify.AsyncNotifier(wm, eh)
+
+        # notifier = pyinotify.AsyncNotifier(wm, eh)
+        notifier = pyinotify.AsyncNotifier(wm, self.widget.reload())
 
 
         notifier.loop()
@@ -50,6 +53,7 @@ class Example(QtSvg.QSvgWidget):
         y_center = (y_mouse - y_window) / dy_window * vb.height() + vb.y()
         center = [x_center, y_center]
         self.parent.update(center = center)
+
 
     def mouseReleaseEvent(self, QMouseEvent):
         cursor =QtGui.QCursor()
