@@ -97,6 +97,7 @@ def main():
     ex = [Example(svg_file),Example(svg_file)]
     watcher = ThreadClass(ex)
     watcher.start()
+class main():
 
     for e in ex:
         e.show()
@@ -104,7 +105,7 @@ def main():
     sys.exit(app.exec_())
 
 if __name__ == '__main__':
-    main()
+    m = main()
 # asyncore.loop()
 # svgWidget.setGeometry(50,50,759,668)
 
