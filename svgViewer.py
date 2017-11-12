@@ -3,20 +3,11 @@ from PyQt5 import QtGui, QtSvg, QtWidgets, QtCore
 import asyncore
 import pyinotify
 
-# app = QtWidgets.QApplication(sys.argv)
-# svgWidget = QtSvg.QSvgWidget('output_debug.svg')
-# # svgWidget.setGeometry(50,50,759,668)
-# svgWidget.show()
-
 class ThreadClass(QtCore.QThread):
 
     def __init__(self, main):
         super().__init__()
         self.widget = main
-
-    # def run(self):
-        # while True:
-        #     time.sleep(1)
 
     def run(self):
         mask_events = pyinotify.IN_MODIFY
@@ -43,12 +34,9 @@ class Example(QtSvg.QSvgWidget):
         self.file_name = name
         self.parent = parent
         self.initUI()
-        # self.scale = 0.1
-        # self.center = [0, 0]
 
     def reload(self):
         self.initUI()
-        # super().__init__(self.file_name)
 
     def mousePressEvent(self, QMouseEvent):
         x_mouse = QMouseEvent.pos().x()
@@ -62,13 +50,11 @@ class Example(QtSvg.QSvgWidget):
         y_center = (y_mouse - y_window) / dy_window * vb.height() + vb.y()
         center = [x_center, y_center]
         self.parent.update(center = center)
-        # self.update()
 
     def mouseReleaseEvent(self, QMouseEvent):
         cursor =QtGui.QCursor()
 
     def update(self):
-
         dx_window = self.geometry().width()
         dy_window = self.geometry().height()
 
@@ -122,13 +108,10 @@ class main():
             self.center = center
         if scale:
             self.scale = scale
-        print("self.center : ", self.center)
 
         for w in self.windows:
             w.update()
 
 if __name__ == '__main__':
     m = main()
-# asyncore.loop()
-# svgWidget.setGeometry(50,50,759,668)
 
