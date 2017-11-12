@@ -1,3 +1,4 @@
+from optparse import OptionParser
 import sys
 from PyQt5 import QtGui, QtSvg, QtWidgets, QtCore
 import asyncore
@@ -90,6 +91,9 @@ class MyEventHandler(pyinotify.ProcessEvent):
 
 class main():
     def __init__(self):
+        parser = OptionParser(usage="%prog files", version="%prog 1.0")
+        # parser.add_option("-c", defougg
+        (options, args) = parser.parse_args()
         app = QtWidgets.QApplication(sys.argv)
         svg_file = ['output_debug.svg', 'output_debug_selection.svg']
         self.windows = [Example(f, self) for f in svg_file]
@@ -97,6 +101,7 @@ class main():
         # watcher.start()
         self.center = [0,0]
         self.scale = 0.1
+
 
         for e in self.windows:
             e.show()
