@@ -2,25 +2,16 @@ import sys
 from PyQt5 import QtGui, QtSvg, QtWidgets, QtCore
 import asyncore
 import pyinotify
-from optparse import OptionParser
-
-# app = QtWidgets.QApplication(sys.argv)
-# svgWidget = QtSvg.QSvgWidget('output_debug.svg')
-# # svgWidget.setGeometry(50,50,759,668)
-# svgWidget.show()
 
 class ThreadClass(QtCore.QThread):
 
-    def __init__(self, widgit):
+    def __init__(self, main):
         super().__init__()
-        self.widget = widgit
-
-    # def run(self):
-        # while True:
-        #     time.sleep(1)
+        self.widget = main
 
     def run(self):
-        mask_events = pyinotify.IN_MODIFY
+        # mask_events = pyinotify.IN_MODIFY
+
         # event handler
         eh = MyEventHandler(self.widget)
 
@@ -30,7 +21,9 @@ class ThreadClass(QtCore.QThread):
         # wdd = wm.add_watch('./', mask_events)
         wm.add_watch('./', pyinotify.ALL_EVENTS, rec=True)
         # notifier = pyinotify.Notifier(wm, eh)
-        notifier = pyinotify.AsyncNotifier(wm, eh)
+
+        # notifier = pyinotify.AsyncNotifier(wm, eh)
+        notifier = pyinotify.AsyncNotifier(wm, self.widget.reload())
 
 
         notifier.loop()
@@ -38,14 +31,15 @@ class ThreadClass(QtCore.QThread):
 
 # sys.exit(app.exec_())
 class Example(QtSvg.QSvgWidget):
-    def __init__(self, name):
+    def __init__(self, name, parent):
         super().__init__(name)
 
         self.file_name = name
         self.parent = parent
         self.initUI()
-        self.scale = 0.1
-        self.center = [0, 0]
+
+    def reload(self):
+        self.initUI()
 
     def mousePressEvent(self, QMouseEvent):
         x_mouse = QMouseEvent.pos().x()
@@ -57,21 +51,21 @@ class Example(QtSvg.QSvgWidget):
         dy_window = self.geometry().height()
         x_center = (x_mouse - x_window) / dx_window * vb.width() + vb.x()
         y_center = (y_mouse - y_window) / dy_window * vb.height() + vb.y()
-        self.center = [x_center, y_center]
-        self.update()
+        center = [x_center, y_center]
+        self.parent.update(center = center)
+
 
     def mouseReleaseEvent(self, QMouseEvent):
         cursor =QtGui.QCursor()
 
     def update(self):
-
         dx_window = self.geometry().width()
         dy_window = self.geometry().height()
 
-        dx_r= dx_window * self.scale
-        dy_r= dy_window * self.scale
+        dx_r= dx_window * self.parent.scale
+        dy_r= dy_window * self.parent.scale
 
-        r = QtCore.QRect(self.center[0] - dx_r/2, self.center[1] - dy_r/2, dx_r, dy_r)
+        r = QtCore.QRect(self.parent.center[0] - dx_r/2, self.parent.center[1] - dy_r/2, dx_r, dy_r)
         self.renderer().setViewBox(r)
         super().update()
 
@@ -88,26 +82,40 @@ class MyEventHandler(pyinotify.ProcessEvent):
         self.widget = widget
 
     def process_IN_CREATE(self, event):
-        self.widget.update()
+        self.widget.reload()
 
     def process_IN_MODIFY(self, event):
-        self.widget.update()
+        self.widget.reload()
 
-def main():
-    app = QtWidgets.QApplication(sys.argv)
-    svg_file = 'output_debug.svg'
-    ex = Example(svg_file)
-    watcher = ThreadClass(ex)
-    watcher.start()
+class main():
+    def __init__(self):
+        app = QtWidgets.QApplication(sys.argv)
+        svg_file = ['output_debug.svg', 'output_debug_selection.svg']
+        self.windows = [Example(f, self) for f in svg_file]
+        watcher = ThreadClass(self)
+        watcher.start()
+        self.center = [0,0]
+        self.scale = 0.1
 
-    ex.show()
-    parser = OptionParser(usage="%prog files", version="%prog 1.0")
-    (options, args) = parser.parse_args()
+        for e in self.windows:
+            e.show()
 
-    sys.exit(app.exec_())
+        sys.exit(app.exec_())
+
+    def reload(self):
+        for w in self.windows:
+            w.reload()
+        self.update()
+
+    def update(self, center = None, scale=None):
+        if center:
+            self.center = center
+        if scale:
+            self.scale = scale
+
+        for w in self.windows:
+            w.update()
 
 if __name__ == '__main__':
-    main()
-# asyncore.loop()
-# svgWidget.setGeometry(50,50,759,668)
+    m = main()
 
