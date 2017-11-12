@@ -41,6 +41,8 @@ class Example(QtSvg.QSvgWidget):
 
     def reload(self):
         self.initUI()
+        self.load(self.file_name)
+
 
     def mousePressEvent(self, QMouseEvent):
         x_mouse = QMouseEvent.pos().x()
