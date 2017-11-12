@@ -93,20 +93,20 @@ class MyEventHandler(pyinotify.ProcessEvent):
     def process_IN_MODIFY(self, event):
         self.widget.update()
 
-def main():
-    app = QtWidgets.QApplication(sys.argv)
-    svg_file = 'output_debug.svg'
-    ex = [Example(svg_file),Example(svg_file)]
-    watcher = ThreadClass(ex)
-    watcher.start()
 class main():
+    def __init__(self):
+        app = QtWidgets.QApplication(sys.argv)
+        svg_file = 'output_debug.svg'
+        self.windows = [Example(svg_file, self),Example(svg_file, self)]
+        watcher = ThreadClass(self)
+        watcher.start()
         self.center = [0,0]
         self.scale = 0.1
 
-    for e in ex:
-        e.show()
+        for e in self.windows:
+            e.show()
 
-    sys.exit(app.exec_())
+        sys.exit(app.exec_())
 
     def update(self, center = None, scale=None):
         if center:
