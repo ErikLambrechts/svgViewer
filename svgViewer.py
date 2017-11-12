@@ -94,11 +94,12 @@ class MyEventHandler(pyinotify.ProcessEvent):
 def main():
     app = QtWidgets.QApplication(sys.argv)
     svg_file = 'output_debug.svg'
-    ex = Example(svg_file)
+    ex = [Example(svg_file),Example(svg_file)]
     watcher = ThreadClass(ex)
     watcher.start()
 
-    ex.show()
+    for e in ex:
+        e.show()
 
     sys.exit(app.exec_())
 
