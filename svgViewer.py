@@ -10,9 +10,9 @@ import pyinotify
 
 class ThreadClass(QtCore.QThread):
 
-    def __init__(self, widgit):
+    def __init__(self, main):
         super().__init__()
-        self.widget = widgit
+        self.widget = main
 
     # def run(self):
         # while True:
