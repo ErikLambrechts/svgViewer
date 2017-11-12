@@ -107,6 +107,16 @@ class main():
 
     sys.exit(app.exec_())
 
+    def update(self, center = None, scale=None):
+        if center:
+            self.center = center
+        if scale:
+            self.scale = scale
+        print("self.center : ", self.center)
+
+        for w in self.windows:
+            w.update()
+
 if __name__ == '__main__':
     m = main()
 # asyncore.loop()
