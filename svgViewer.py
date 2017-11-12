@@ -124,7 +124,7 @@ def main():
     parser = OptionParser(usage="%prog files", version="%prog 1.0")
     (options, args) = parser.parse_args()
 
-    sys.exit(app.exec_())
+    # svgViewer(args)
     svgViewer(['output_debug.svg'])
     svgViewer.start()
 
