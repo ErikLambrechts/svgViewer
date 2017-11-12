@@ -37,10 +37,11 @@ class ThreadClass(QtCore.QThread):
 
 # sys.exit(app.exec_())
 class Example(QtSvg.QSvgWidget):
-    def __init__(self, name):
+    def __init__(self, name, parent):
         super().__init__(name)
 
         self.file_name = name
+        self.parent = parent
         self.initUI()
         # self.scale = 0.1
         # self.center = [0, 0]
