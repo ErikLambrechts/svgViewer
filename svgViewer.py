@@ -92,8 +92,8 @@ class main():
         app = QtWidgets.QApplication(sys.argv)
         svg_file = ['output_debug.svg', 'output_debug_selection.svg']
         self.windows = [Example(f, self) for f in svg_file]
-        watcher = ThreadClass(self)
-        watcher.start()
+        # watcher = ThreadClass(self)
+        # watcher.start()
         self.center = [0,0]
         self.scale = 0.1
 
