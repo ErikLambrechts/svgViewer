@@ -2,6 +2,7 @@ import sys
 from PyQt5 import QtGui, QtSvg, QtWidgets, QtCore
 import asyncore
 import pyinotify
+from optparse import OptionParser
 
 # app = QtWidgets.QApplication(sys.argv)
 # svgWidget = QtSvg.QSvgWidget('output_debug.svg')
@@ -99,6 +100,8 @@ def main():
     watcher.start()
 
     ex.show()
+    parser = OptionParser(usage="%prog files", version="%prog 1.0")
+    (options, args) = parser.parse_args()
 
     sys.exit(app.exec_())
 
