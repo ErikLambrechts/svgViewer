@@ -42,8 +42,8 @@ class Example(QtSvg.QSvgWidget):
 
         self.file_name = name
         self.initUI()
-        self.scale = 0.1
-        self.center = [0, 0]
+        # self.scale = 0.1
+        # self.center = [0, 0]
 
     def mousePressEvent(self, QMouseEvent):
         x_mouse = QMouseEvent.pos().x()
@@ -55,8 +55,9 @@ class Example(QtSvg.QSvgWidget):
         dy_window = self.geometry().height()
         x_center = (x_mouse - x_window) / dx_window * vb.width() + vb.x()
         y_center = (y_mouse - y_window) / dy_window * vb.height() + vb.y()
-        self.center = [x_center, y_center]
-        self.update()
+        center = [x_center, y_center]
+        self.parent.update(center = center)
+        # self.update()
 
     def mouseReleaseEvent(self, QMouseEvent):
         cursor =QtGui.QCursor()
@@ -66,10 +67,10 @@ class Example(QtSvg.QSvgWidget):
         dx_window = self.geometry().width()
         dy_window = self.geometry().height()
 
-        dx_r= dx_window * self.scale
-        dy_r= dy_window * self.scale
+        dx_r= dx_window * self.parent.scale
+        dy_r= dy_window * self.parent.scale
 
-        r = QtCore.QRect(self.center[0] - dx_r/2, self.center[1] - dy_r/2, dx_r, dy_r)
+        r = QtCore.QRect(self.parent.center[0] - dx_r/2, self.parent.center[1] - dy_r/2, dx_r, dy_r)
         self.renderer().setViewBox(r)
         super().update()
 
@@ -98,6 +99,8 @@ def main():
     watcher = ThreadClass(ex)
     watcher.start()
 class main():
+        self.center = [0,0]
+        self.scale = 0.1
 
     for e in ex:
         e.show()
