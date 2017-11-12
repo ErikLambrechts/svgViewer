@@ -25,12 +25,19 @@ class ThreadClass(QtCore.QThread):
 
         # notifier = pyinotify.AsyncNotifier(wm, eh)
         notifier = pyinotify.AsyncNotifier(wm, self.widget.reload())
-
-
         notifier.loop()
 
+class MyEventHandler(pyinotify.ProcessEvent):
+    def __init__(self, widget):
+        super().__init__()
+        self.widget = widget
 
-# sys.exit(app.exec_())
+    def process_IN_CREATE(self, event):
+        self.widget.reload()
+
+    def process_IN_MODIFY(self, event):
+        self.widget.reload()
+
 class Example(QtSvg.QSvgWidget):
     def __init__(self, name, parent):
         super().__init__(name)
@@ -40,9 +47,7 @@ class Example(QtSvg.QSvgWidget):
         self.initUI()
 
     def reload(self):
-        self.initUI()
-        self.load(self.file_name)
-
+        r = self.renderer().load(self.file_name)
 
     def mousePressEvent(self, QMouseEvent):
         x_mouse = QMouseEvent.pos().x()
@@ -59,7 +64,6 @@ class Example(QtSvg.QSvgWidget):
 
     def keyPressEvent(self, QKeyEvent):
         print(QKeyEvent)
-        self.parent.reload()
         if QKeyEvent.key() == QtCore.Qt.Key_R:
             self.parent.reload()
         if QKeyEvent.key() == QtCore.Qt.Key_Space:
@@ -70,6 +74,7 @@ class Example(QtSvg.QSvgWidget):
             self.parent.update(scale_factor = 0.9)
         if QKeyEvent.key() == QtCore.Qt.Key_Minus:
             self.parent.update(scale_factor = 10/9)
+
     def mouseReleaseEvent(self, QMouseEvent):
         cursor =QtGui.QCursor()
 
@@ -91,17 +96,6 @@ class Example(QtSvg.QSvgWidget):
         self.setWindowTitle(self.file_name)
         self.setWindowFlags(self.windowFlags() | QtCore.Qt.FramelessWindowHint)
 
-class MyEventHandler(pyinotify.ProcessEvent):
-    def __init__(self, widget):
-        super().__init__()
-        self.widget = widget
-
-    def process_IN_CREATE(self, event):
-        self.widget.reload()
-
-    def process_IN_MODIFY(self, event):
-        self.widget.reload()
-
 class main():
     def __init__(self):
         parser = OptionParser(usage="%prog files", version="%prog 1.0")
@@ -109,12 +103,12 @@ class main():
         (options, args) = parser.parse_args()
         app = QtWidgets.QApplication(sys.argv)
         svg_file = ['output_debug.svg', 'output_debug_selection.svg']
+        # svg_file = ['output_debug.svg']
         self.windows = [Example(f, self) for f in svg_file]
         # watcher = ThreadClass(self)
         # watcher.start()
         self.center = [0,0]
         self.scale = 0.1
-
 
         for e in self.windows:
             e.show()
