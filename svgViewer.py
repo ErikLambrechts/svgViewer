@@ -4,20 +4,11 @@ import asyncore
 import pyinotify
 from optparse import OptionParser
 
-# app = QtWidgets.QApplication(sys.argv)
-# svgWidget = QtSvg.QSvgWidget('output_debug.svg')
-# # svgWidget.setGeometry(50,50,759,668)
-# svgWidget.show()
-
 class ThreadClass(QtCore.QThread):
 
     def __init__(self, widgit):
         super().__init__()
         self.widget = widgit
-
-    # def run(self):
-        # while True:
-        #     time.sleep(1)
 
     def run(self):
         mask_events = pyinotify.IN_MODIFY
@@ -31,12 +22,8 @@ class ThreadClass(QtCore.QThread):
         wm.add_watch('./', pyinotify.ALL_EVENTS, rec=True)
         # notifier = pyinotify.Notifier(wm, eh)
         notifier = pyinotify.AsyncNotifier(wm, eh)
-
-
         notifier.loop()
 
-
-# sys.exit(app.exec_())
 class Example(QtSvg.QSvgWidget):
     def __init__(self, name):
         super().__init__(name)
@@ -130,6 +117,4 @@ def main():
 
 if __name__ == '__main__':
     main()
-# asyncore.loop()
-# svgWidget.setGeometry(50,50,759,668)
 
