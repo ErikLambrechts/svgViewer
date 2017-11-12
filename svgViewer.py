@@ -46,6 +46,10 @@ class Example(QtSvg.QSvgWidget):
         # self.scale = 0.1
         # self.center = [0, 0]
 
+    def reload(self):
+        self.initUI()
+        # super().__init__(self.file_name)
+
     def mousePressEvent(self, QMouseEvent):
         x_mouse = QMouseEvent.pos().x()
         y_mouse = QMouseEvent.pos().y()
@@ -88,10 +92,10 @@ class MyEventHandler(pyinotify.ProcessEvent):
         self.widget = widget
 
     def process_IN_CREATE(self, event):
-        self.widget.update()
+        self.widget.reload()
 
     def process_IN_MODIFY(self, event):
-        self.widget.update()
+        self.widget.reload()
 
 class main():
     def __init__(self):
@@ -107,6 +111,11 @@ class main():
             e.show()
 
         sys.exit(app.exec_())
+
+    def reload(self):
+        for w in self.windows:
+            w.reload()
+        self.update()
 
     def update(self, center = None, scale=None):
         if center:
