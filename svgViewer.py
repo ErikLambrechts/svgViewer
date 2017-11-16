@@ -103,7 +103,7 @@ class main():
         (options, args) = parser.parse_args()
         app = QtWidgets.QApplication(sys.argv)
         svg_file = ['output_debug.svg', 'output_debug_selection.svg']
-        # svg_file = ['output_debug.svg']
+        svg_file = args
         self.windows = [Example(f, self) for f in svg_file]
         # watcher = ThreadClass(self)
         # watcher.start()
