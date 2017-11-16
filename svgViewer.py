@@ -63,7 +63,6 @@ class Example(QtSvg.QSvgWidget):
         self.parent.update(center = center)
 
     def keyPressEvent(self, QKeyEvent):
-        print(QKeyEvent)
         if QKeyEvent.key() == QtCore.Qt.Key_R:
             self.parent.reload()
         if QKeyEvent.key() == QtCore.Qt.Key_Space:
